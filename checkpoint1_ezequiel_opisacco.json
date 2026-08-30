@@ -1,0 +1,173 @@
+{
+  "name": "M1 - Asistente Gestión Reclamos Calidad",
+  "nodes": [
+    {
+      "parameters": {
+        "options": {
+          "systemMessage": "ROL\n\nSos el Asistente de Gestión de Reclamos de Calidad de una empresa de logística.\n\nTu función es analizar solicitudes y reclamos relacionados con operaciones logísticas, organizar la información disponible y ayudar al equipo de Calidad a identificar casos, información faltante y próximos pasos.\n\nÁMBITO\n\nTu alcance se limita al análisis preliminar, organización y consulta de información relacionada con reclamos de Calidad.\n\nPodés analizar información sobre clientes, operaciones, tipos de reclamo, documentación mencionada, estados y datos disponibles en las herramientas autorizadas.\n\nOBJETIVO\n\nAnalizar la información recibida, identificar los datos relevantes del reclamo y consultar las herramientas autorizadas cuando sea necesario para verificar información o casos previamente registrados.\n\nCuando corresponda, indicá qué información está disponible, qué información falta y qué debería revisarse a continuación.\n\nREGLAS\n\n1. No inventes información.\n\n2. No completes datos faltantes suponiendo valores.\n\n3. No inventes números de reclamo, clientes, operaciones, estados ni documentación.\n\n4. Utilizá las herramientas autorizadas cuando sea necesario verificar información existente.\n\n5. Si la información no permite identificar correctamente un caso, indicá que la información es insuficiente.\n\n6. Si encontrás información contradictoria, informalo claramente.\n\n7. No determines responsabilidades definitivas.\n\n8. No apruebes indemnizaciones.\n\n9. No cierres reclamos.\n\n10. No tomes decisiones definitivas relacionadas con seguros.\n\n11. No realices acciones sensibles en nombre del equipo de Calidad.\n\n12. Diferenciá la operación interna de la empresa de otras características del servicio. Por ejemplo, una operación con transporte aéreo puede pertenecer internamente a Última Milla.\n\n13. Utilizá la herramienta conectada únicamente cuando sea necesaria para cumplir el objetivo.\n\n14. Cuando consultes una herramienta, utilizá la información obtenida como fuente de respuesta.\n\n15. Utilizá lenguaje profesional, claro y directo.\n\n16. No utilices lenguaje inclusivo, desdoblamientos de género ni símbolos utilizados para lenguaje inclusivo.\n\nESCALAMIENTO\n\nSi falta información importante, existe una contradicción o la solicitud requiere una decisión que corresponde al equipo de Calidad, no tomes la decisión por tu cuenta.\n\nEn esos casos, indicá claramente qué información falta o qué punto necesita revisión humana y sugerí el siguiente paso.",
+          "maxIterations": 7
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        208,
+        0
+      ],
+      "id": "300d09f1-e812-4533-b44e-abe7478da617",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": "openai/gpt-4o-mini",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        208,
+        192
+      ],
+      "id": "72c68ad0-6792-4cd4-9ac2-27a2fbcae9dc",
+      "name": "OpenRouter Chat Model",
+      "credentials": {
+        "openRouterApi": {
+          "id": "WMvUIdrCxY6yp6ea",
+          "name": "OpenRouter account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        0,
+        0
+      ],
+      "id": "b4f6dcc9-ed1d-4ef2-9c7b-18511cc0b5ad",
+      "name": "Chat Trigger",
+      "webhookId": "ac804afe-2f9b-4ae4-8cfb-a2a1ca51e403"
+    },
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "Esta herramienta permite consultar el registro central de reclamos de Calidad.\n\nUtilizá esta herramienta cuando necesites verificar si un reclamo ya existe, buscar un caso por ID, cliente, operación, tipo de reclamo o información relacionada, o confirmar el estado actual de un reclamo registrado.\n\nDebés utilizar esta herramienta cuando la solicitud recibida haga referencia a un reclamo existente o cuando necesites verificar si un caso ya fue registrado antes de responder.\n\nLa planilla contiene información de identificación del reclamo, cliente, operación interna, tipo de incidente, estado, detalle y responsable.\n\nNo inventes información que no esté presente en la herramienta.\n\nSi encontrás una coincidencia clara, utilizá los datos obtenidos para responder.\n\nSi no encontrás una coincidencia clara, indicá que el caso no pudo ser identificado y solicitá información adicional o revisión humana.\n\nNo utilices esta herramienta para determinar responsabilidades definitivas, aprobar indemnizaciones, decidir una intervención del seguro ni cerrar un reclamo.\n\nEsta herramienta se utiliza para consultar información existente y verificar el estado de casos de Calidad.",
+        "documentId": {
+          "__rl": true,
+          "value": "14vWR62BMX2UEsMDQsJgO1gB1lho-VPjY8cQocDLEWEw",
+          "mode": "list",
+          "cachedResultName": "M1_Reclamos_Calidad",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/14vWR62BMX2UEsMDQsJgO1gB1lho-VPjY8cQocDLEWEw/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Reclamos",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/14vWR62BMX2UEsMDQsJgO1gB1lho-VPjY8cQocDLEWEw/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.7,
+      "position": [
+        352,
+        208
+      ],
+      "id": "24fe811a-4733-4a5a-9048-0ed7ac5d3110",
+      "name": "Reclamos Calidad",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "JHhbxBDuHqgUaSAv",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "ezeopi921@gmail.com",
+        "subject": "[M1] Observabilidad - Asistente Reclamos Calidad",
+        "message": "=REPORTE DE OBSERVABILIDAD - M1  Resultado del asistente: {{ $json.output }}   Este correo corresponde al reporte automático de supervisión de la ejecución.  Para revisar el recorrido completo y las herramientas utilizadas, consultar la ejecución correspondiente dentro de n8n.",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        560,
+        0
+      ],
+      "id": "1dc5c679-c037-4176-8b8b-de198a17b6a6",
+      "name": "Actualizacion del Reclamo",
+      "webhookId": "09f110d1-2270-4859-ae8a-15e433276de9",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "cRDo5tGnLLQhO1Ye",
+          "name": "Gmail account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "OpenRouter Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Actualizacion del Reclamo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Chat Trigger": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Reclamos Calidad": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "2374a309-9e29-42da-baae-d6cc02979274",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "77fa8dcdc95908e5959a5fbbcac62aa4116e4631590fd3151fb638866173508e"
+  },
+  "nodeGroups": [],
+  "id": "MUxhVuQ22oQp0VaH",
+  "tags": []
+}
