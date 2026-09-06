@@ -1,0 +1,138 @@
+{
+  "name": "Worker 1 - Analizador de Reclamos",
+  "nodes": [
+    {
+      "parameters": {
+        "inputSource": "jsonExample",
+        "jsonExample": "{\n  \"cliente\": \"Boston\",\n  \"asunto\": \"Reclamo por faltante\",\n  \"contenido\": \"La caja de 8,5 kg no llegó a Bahía Blanca\",\n  \"referencia\": \"038388\"\n}"
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        0
+      ],
+      "id": "500b02f7-5c78-4c0b-be83-1f2f088cf491",
+      "name": "When Executed by Another Workflow"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Analiza el siguiente reclamo de calidad.\n\nCliente: {{ $json.cliente }}\nAsunto: {{ $json.asunto }}\nContenido: {{ $json.contenido }}\nReferencia: {{ $json.referencia }}\n\nExtrae únicamente la información relevante y devuelve una respuesta estructurada según las reglas definidas.",
+        "options": {
+          "systemMessage": "ROL\n\nEres un especialista en análisis de Reclamos de Calidad de Robinson Logistics.\n\nÁMBITO\n\nTu única responsabilidad es analizar la información recibida desde el Workflow Manager y extraer los datos relevantes para la gestión de un reclamo.\n\nOBJETIVO\n\nIdentificar, cuando estén disponibles:\n\n* Cliente.\n* Tipo de operación.\n* Incidente informado.\n* Mercadería involucrada.\n* Peso o cantidad.\n* Destino.\n* Valor de la mercadería.\n* Valor del daño, reparación o reacondicionamiento.\n* Número de guía, referencia o reclamo.\n* Información faltante relevante.\n\nREGLAS\n\n* Trabaja únicamente con la información recibida.\n* No inventes datos.\n* Si un dato no está informado, indica \"No informado\".\n* No determines responsabilidades si la información no permite hacerlo.\n* No cierres reclamos.\n* No envíes comunicaciones externas.\n* No tomes decisiones definitivas sobre seguros.\n* No ejecutes tareas correspondientes a otros especialistas.\n* Devuelve información estructurada y útil para el Workflow Manager.\n\nSALIDA\n\nEl resultado debe contener:\n\nstatus\ncliente\noperacion\nincidente\nreferencia\nvalor_mercaderia\nvalor_danio\ndatos_faltantes\nobservaciones\n\nSi ocurre un error durante el procesamiento, devuelve un estado de error y marca que requiere revisión humana.\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        208,
+        0
+      ],
+      "id": "9825ae72-a9ea-42d9-afcc-68f24409dca3",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": "openai/gpt-4o-mini",
+        "options": {
+          "maxTokens": -1,
+          "maxRetries": 5
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        208,
+        192
+      ],
+      "id": "6fe5f9c8-c6dd-4a1a-9205-80908075a391",
+      "name": "OpenRouter Chat Model",
+      "credentials": {
+        "openRouterApi": {
+          "id": "WMvUIdrCxY6yp6ea",
+          "name": "OpenRouter account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "b954282c-6e6f-423e-8681-159e04e04c82",
+              "name": "worker",
+              "value": "Worker 1 - Analizador de Reclamos",
+              "type": "string"
+            },
+            {
+              "id": "313eb183-0b95-4769-b4d6-e4f5a141e618",
+              "name": "resultado",
+              "value": "={{ $json.output }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        560,
+        0
+      ],
+      "id": "8b65077d-079d-4936-b4a1-55b69e4a7a65",
+      "name": "Preparar salida Worker 1"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Preparar salida Worker 1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "65ac5736-cbd4-4ced-aa72-91445953b410",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "77fa8dcdc95908e5959a5fbbcac62aa4116e4631590fd3151fb638866173508e"
+  },
+  "nodeGroups": [],
+  "id": "Y7PfkwKjhAIsPnXh",
+  "tags": []
+}

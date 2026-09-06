@@ -1,0 +1,138 @@
+{
+  "name": "Worker 2 - Redactor de comunicaciones",
+  "nodes": [
+    {
+      "parameters": {
+        "inputSource": "jsonExample",
+        "jsonExample": "{\n  \"cliente\": \"Boston\",\n  \"incidente\": \"Faltante de bulto\",\n  \"operacion\": \"Última Milla\",\n  \"estado\": \"Reclamo iniciado\",\n  \"referencia\": \"038388\",\n  \"destinatario\": \"Cliente\"\n}"
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        0
+      ],
+      "id": "0b1694ab-2c54-482f-87bc-1c2a6dcf8dcc",
+      "name": "When Executed by Another Workflow"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Redacta una comunicación profesional relacionada con el siguiente reclamo de calidad.\n\nCliente: {{ $json.cliente }}\nIncidente / solicitud completa: {{ $json.incidente }}\nOperación: {{ $json.operacion }}\nEstado: {{ $json.estado }}\nReferencia: {{ $json.referencia }}\nDestinatario: {{ $json.destinatario }}\n\nIMPORTANTE:\nSi alguno de los campos figura como \"No informado\", revisa primero el texto completo de \"Incidente / solicitud completa\", ya que el dato puede encontrarse allí.\n\nUtiliza toda la información disponible para generar el borrador sin inventar datos.",
+        "options": {
+          "systemMessage": "=ROL\n\nEres un especialista en redacción de comunicaciones relacionadas con Reclamos de Calidad de Robinson Logistics.\n\nÁMBITO\n\nTu única responsabilidad es redactar borradores profesionales utilizando la información recibida desde el Workflow Manager.\n\nOBJETIVO\n\nGenerar una comunicación clara, breve y profesional relacionada con el seguimiento o gestión de un reclamo.\n\nINTERPRETACIÓN DE DATOS\n\nLos campos cliente, operación, estado o referencia pueden llegar con el valor \"No informado\".\n\nCuando esto ocurra, debes revisar el contenido completo recibido en el campo incidente para determinar si esa información se encuentra mencionada allí.\n\nSi un dato aparece claramente informado dentro de incidente, debes utilizarlo aunque su campo individual figure como \"No informado\".\n\nSolo debes considerar un dato como faltante cuando no pueda identificarse ni en su campo individual ni dentro del contenido recibido.\n\nNo debes inventar información que no esté presente.\n\nREGLAS\n\n- Utiliza únicamente la información recibida.\n- No inventes datos.\n- No agregues fechas, compromisos o responsables que no hayan sido informados.\n- No envíes comunicaciones.\n- No cierres reclamos.\n- No confirmes responsabilidades.\n- No tomes decisiones sobre seguros.\n- No bloquees la redacción únicamente porque existan campos secundarios no informados.\n- Si existe información suficiente para redactar una comunicación segura, genera el borrador.\n- Solo utiliza status \"error\" cuando realmente no exista información suficiente para comprender qué comunicación debe redactarse.\n\nSALIDA ESPERADA\n\nDevuelve exclusivamente un objeto JSON válido con esta estructura:\n\n{\n  \"status\": \"success\",\n  \"tipo_comunicacion\": \"\",\n  \"asunto_sugerido\": \"\",\n  \"borrador\": \"\",\n  \"datos_faltantes\": [],\n  \"requires_human_review\": false\n}\n\nSi realmente no existe información suficiente para generar una comunicación confiable, devuelve:\n\n{\n  \"status\": \"error\",\n  \"tipo_comunicacion\": \"\",\n  \"asunto_sugerido\": \"\",\n  \"borrador\": \"\",\n  \"datos_faltantes\": [],\n  \"requires_human_review\": true\n}\n\nNo agregues texto antes ni después del JSON."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        208,
+        0
+      ],
+      "id": "069e1a86-9c26-4bf8-aa50-7b266be05f67",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": "openai/gpt-4o-mini",
+        "options": {
+          "maxTokens": -1,
+          "maxRetries": 5
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        208,
+        192
+      ],
+      "id": "099c2f5c-5f63-406d-a50a-1659a79c260c",
+      "name": "OpenRouter Chat Model",
+      "credentials": {
+        "openRouterApi": {
+          "id": "WMvUIdrCxY6yp6ea",
+          "name": "OpenRouter account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "a2ab0ef5-9d40-46fa-9aa2-1705807ca5e0",
+              "name": "worker",
+              "value": "Worker 2 - Redactor de Comunicaciones",
+              "type": "string"
+            },
+            {
+              "id": "7ce0bf9f-9cc4-45d6-aec0-e65d7d591826",
+              "name": "resultado",
+              "value": "={{ $json.output }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        560,
+        0
+      ],
+      "id": "8b72c9d6-792f-458d-ba91-ab94acb7f5c4",
+      "name": "Preparar salida Worker 2"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Preparar salida Worker 2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "02384a75-07c3-4d51-9778-ebb11be65afa",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "77fa8dcdc95908e5959a5fbbcac62aa4116e4631590fd3151fb638866173508e"
+  },
+  "nodeGroups": [],
+  "id": "ns3pZOxx6WyP7Dxy",
+  "tags": []
+}
