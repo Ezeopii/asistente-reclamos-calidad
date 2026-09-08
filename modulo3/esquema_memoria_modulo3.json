@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "ResumenMemoriaReclamo",
+  "description": "Contrato de datos para la salida del agente encargado de consolidar la memoria de una sesión de Reclamos de Calidad.",
+  "type": "object",
+  "required": [
+    "asunto_principal",
+    "puntos_clave",
+    "accion_requerida"
+  ],
+  "properties": {
+    "asunto_principal": {
+      "type": "string",
+      "description": "Tema principal del reclamo o de la gestión realizada.",
+      "minLength": 1
+    },
+    "puntos_clave": {
+      "type": "array",
+      "description": "Información relevante que debe conservarse como memoria de largo plazo.",
+      "items": {
+        "oneOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "object",
+            "minProperties": 1,
+            "additionalProperties": {
+              "type": [
+                "string",
+                "number",
+                "boolean",
+                "null"
+              ]
+            }
+          }
+        ]
+      }
+    },
+    "accion_requerida": {
+      "type": "string",
+      "description": "Próxima acción o seguimiento necesario para continuar la gestión.",
+      "minLength": 1
+    }
+  },
+  "additionalProperties": false
+}
