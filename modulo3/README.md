@@ -69,3 +69,13 @@ Los Workers utilizados por el Manager continúan siendo los desarrollados en el 
 Proyecto
 
 Asistente para la Gestión de Reclamos de Calidad
+
+## Manejo de errores
+
+El flujo contempla una vía de revisión humana cuando la solicitud no puede clasificarse correctamente.
+
+Para la capa de memoria, si no existe un registro asociado al Session_ID, el workflow crea una memoria inicial y continúa la ejecución sin detenerse.
+
+La actualización de memoria se realiza sobre el mismo registro asociado al Session_ID para evitar duplicados.
+
+Como mejora futura, se contempla incorporar manejo específico de errores de conectividad con Airtable y fallos del modelo de resumen.
