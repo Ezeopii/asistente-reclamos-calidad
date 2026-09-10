@@ -1,0 +1,11 @@
+﻿Corrida,Pregunta,Arquitectura,Exactitud_Factual,Estado_Veredicto,Costo_Proxy
+1,Hora de planificación,A - Sin RAG,3,CORREGIR,2 llamadas LLM
+1,Hora de planificación,B - Con RAG,5,ACEPTADO,3 llamadas LLM + retrieval
+2,Rechazo de mercadería,A - Sin RAG,2,RECHAZADO,2 llamadas LLM
+2,Rechazo de mercadería,B - Con RAG,5,ACEPTADO,3 llamadas LLM + retrieval
+3,Retiro de devolución,A - Sin RAG,2,RECHAZADO,2 llamadas LLM
+3,Retiro de devolución,B - Con RAG,5,ACEPTADO,3 llamadas LLM + retrieval
+4,Servicio aéreo estándar,A - Sin RAG,2,RECHAZADO,2 llamadas LLM
+4,Servicio aéreo estándar,B - Con RAG,5,ACEPTADO,3 llamadas LLM + retrieval
+5,Garantía no documentada,A - Sin RAG,5,ACEPTADO,2 llamadas LLM
+5,Garantía no documentada,B - Con RAG,5,ACEPTADO,3 llamadas LLM + retrieval
