@@ -4,7 +4,7 @@ Proyecto: Asistente para la Gestion de Reclamos de Calidad
 
 Este modulo lleva el workflow a una capa de gobierno empresarial: costos, ROI, trazabilidad, seguridad, privacidad y monitoreo operativo.
 
-Evidencias principales
+Contenido del modulo
 
 1. Dashboard operativo
 
@@ -134,6 +134,16 @@ Para cualquier sub-workflow o herramienta nueva, el traceId debe transmitirse ex
 
 Seguridad y gobernanza
 
+Control de sesgo algorítmico
+
+Criterios objetivos en el System Prompt.
+
+Mismas reglas de evaluación para todos los casos.
+
+Revisión humana obligatoria ante decisiones críticas o baja calidad.
+
+Auditoría mediante logs y traceId para revisar diferencias entre decisiones automáticas y humanas.
+
 Se creo una API key de desarrollo separada:
 
 RL-Calidad-M9-DEV
@@ -152,7 +162,7 @@ Prompt Injection: Block.
 
 Deteccion selectiva de informacion sensible.
 
-La key creada para M9 se usa como evidencia de separacion de entornos; no fue necesario reemplazar la credencial del workflow durante el checkpoint.
+La key creada para M9 implementa la separacion del entorno DEV; no fue necesario reemplazar la credencial del workflow durante el checkpoint.
 
 Privacidad
 
@@ -166,4 +176,20 @@ Mantener separado el logging interno de la retencion del proveedor.
 
 Validar providers/endpoints con Sistemas y Legal.
 
-No guardar razonamiento interno del modelo; registrar solamente eventos, outputs, evidencias, scores y decisiones observables.
+No guardar razonamiento interno del modelo; registrar solamente eventos, outputs, referencias, scores y decisiones observables.
+
+Mejoras incorporadas a partir del feedback de M8
+
+Para la version final del proyecto quedan como reglas de gobierno:
+
+Un reintento por CORREGIR debe volver a pasar por el Judge.
+
+Solo score 4-5 se acepta; un segundo CORREGIR o RECHAZADO escala a HITL.
+
+El Judge debe sumar fundamento, evidencia_utilizada y errores_detectados.
+
+Los logs deben capturar tokens y costo monetario real por corrida.
+
+Se usa RECHAZADO de forma consistente.
+
+El HITL final debe ser persistente e incluir aprobar/rechazar/editar y timeout.
